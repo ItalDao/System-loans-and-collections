@@ -1,0 +1,98 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 0. TOGGLE SIDEBAR (Colapsable)
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('collapsed');
+                    localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                });
+                
+                // Restaurar estado del sidebar
+                const wasCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (wasCollapsed && window.innerWidth <= 768) {
+                    sidebar.classList.add('collapsed');
+                }
+            }
+            
+            // 1. Activar Menú Lateral (Active State)
+            const currentLocation = location.pathname;
+            const menuItems = document.querySelectorAll('.sidebar .nav-link');
+            
+            menuItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (currentLocation === href || (currentLocation.startsWith(href) && href !== '/')) {
+                    item.classList.add('active');
+                }
+            });
+
+            // 2. Detectar Mensajes Flash y mostrar SweetAlert
+            const mensajeExito = "<%= typeof mensajeExito !== 'undefined' ? mensajeExito : '' %>";
+            const mensajeError = "<%= typeof mensajeError !== 'undefined' ? mensajeError : '' %>";
+
+            if (mensajeExito) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: mensajeExito,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end',
+                    background: '#f0fdf4',
+                    color: '#15803d',
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            }
+
+            if (mensajeError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Oops!',
+                    text: mensajeError,
+                    confirmButtonColor: '#dc2626',
+                    confirmButtonText: 'Entendido',
+                    background: '#fef2f2',
+                    color: '#991b1b'
+                });
+            }
+        });
+
+        // 3. Función Global para Confirmar Eliminación
+        function confirmarEliminacion(event, url) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: '¿Eliminar este registro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="bi bi-trash"></i> Sí, eliminar',
+                cancelButtonText: '<i class="bi bi-x"></i> Cancelar',
+                background: '#fefce8',
+                color: '#92400e',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-danger me-2',
+                    cancelButton: 'btn btn-outline-primary'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

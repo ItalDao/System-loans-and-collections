@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<%- include('../partials/head') %>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <%- include('../partials/sidebar') %>
+
+            <div class="col py-4">
+                <div class="container-lg">
+                    <!-- HEADER -->
+                    <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom border-light">
+                        <div>
+                            <h1 class="mb-1"><i class="bi bi-piggy-bank" style="color: #10b981;"></i> Cuentas de Ahorro</h1>
+                            <p class="text-muted mb-0">Gestiona los ahorros de tus clientes con tasas competitivas</p>
+                        </div>
+                        <a href="/ahorros/aperturar" class="btn btn-success">
+                            <i class="bi bi-plus-circle-fill"></i> Aperturar Cuenta
+                        </a>
+                    </div>
+
+                    <% if(mensajeExito && mensajeExito.length > 0) { %>
+                        <div class="d-none" id="flashMessageSuccess"><%= mensajeExito %></div>
+                    <% } %>
+
+                    <!-- TABLA -->
+                    <div class="card card-box border-0 overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">ID Cuenta</th>
+                                        <th>Titular</th>
+                                        <th style="width: 100px;">DNI</th>
+                                        <th class="text-end" style="width: 150px;">Saldo Disponible</th>
+                                        <th style="width: 180px; text-align: center;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (cuentas.length > 0) { %>
+                                        <% cuentas.forEach((c, index) => { %>
+                                            <tr style="animation: fadeIn 0.5s ease-out <%= index * 0.05 %>s backwards;">
+                                                <td>
+                                                    <span class="badge" style="background: linear-gradient(135deg, #4cc4b6 0%, #3b82f6 100%); color: white; padding: 8px 12px; font-weight: 600;">
+                                                        #<%= c.id %>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-700" style="color: #0f1419;">
+                                                        <%= c.nombre %> <%= c.apellido %>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info text-white" style="font-weight: 600;">
+                                                        <%= c.dni %>
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <div class="text-success-amount">
+                                                        <%= empresa.moneda %> <%= parseFloat(c.saldo_actual).toFixed(2) %>
+                                                    </div>
+                                                    <small class="text-muted d-block mt-1">Saldo actual</small>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="/ahorros/ver/<%= c.id %>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-arrow-left-right"></i> Operaciones
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="5" class="text-center py-5">
+                                                <div class="mb-3">
+                                                    <i class="bi bi-piggy-bank" style="font-size: 3rem; color: #cbd5e1;"></i>
+                                                </div>
+                                                <h5 class="text-muted">No hay cuentas de ahorro activas</h5>
+                                                <p class="text-muted mb-3">Comienza a captar fondos aperturando tu primera cuenta</p>
+                                                <a href="/ahorros/aperturar" class="btn btn-success btn-sm">
+                                                    <i class="bi bi-plus-circle-fill"></i> Aperturar Cuenta
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fw-700 {
+            font-weight: 700;
+        }
+    </style>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<%- include('partials/head') %>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <%- include('partials/sidebar') %>
+
+            <div class="col py-4">
+                <div class="container-lg">
+                    <!-- HEADER -->
+                    <div class="mb-5 pb-3 border-bottom border-light">
+                        <h1 class="mb-1"><i class="bi bi-bar-chart-fill" style="color: #3b82f6;"></i> Panel de Control</h1>
+                        <p class="text-muted mb-0">Bienvenido, <%= usuario ? usuario.nombre.split(' ')[0] : 'Usuario' %>. Aquí puedes ver el resumen de tu negocio en tiempo real.</p>
+                    </div>
+                    
+                    <!-- KPI CARDS -->
+                    <div class="row g-3 mb-5">
+                        
+                        <div class="col-md-4 col-xl hover-lift">
+                            <div class="card card-box bg-primary text-white p-4 h-100 shadow-sm border-0 stat-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="opacity-75 text-uppercase fw-bold">Total de Clientes</small>
+                                        <h2 class="mb-0 mt-2"><%= (typeof totales !== 'undefined' && totales.clientes) ? totales.clientes : 0 %></h2>
+                                        <small class="opacity-75 mt-2 d-block">Clientes activos</small>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl hover-lift">
+                            <div class="card card-box bg-success text-white p-4 h-100 shadow-sm border-0 stat-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="opacity-75 text-uppercase fw-bold">Capital Pendiente</small>
+                                        <h2 class="mb-0 mt-2">
+                                            <%= empresa.moneda || '$' %> 
+                                            <%= parseFloat((typeof totales !== 'undefined' && totales.dineroPrestado) ? totales.dineroPrestado : 0).toFixed(2) %>
+                                        </h2>
+                                        <small class="opacity-75 mt-2 d-block"><i class="bi bi-arrow-right-short"></i> Dinero en circulación</small>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl hover-lift">
+                            <div class="card card-box text-white p-4 h-100 shadow-sm border-0 stat-card" style="background: linear-gradient(135deg, #6610f2 0%, #5a0fd8 100%);">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="opacity-75 text-uppercase fw-bold">Fondos / Ahorros</small>
+                                        <h2 class="mb-0 mt-2">
+                                            <%= empresa.moneda || '$' %> 
+                                            <%= parseFloat((typeof totales !== 'undefined' && totales.totalAhorros) ? totales.totalAhorros : 0).toFixed(2) %>
+                                        </h2>
+                                        <small class="opacity-75 mt-2 d-block"><i class="bi bi-arrow-left-short"></i> Fondos captados</small>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="bi bi-piggy-bank-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl hover-lift">
+                            <div class="card card-box bg-warning text-white p-4 h-100 shadow-sm border-0 stat-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="opacity-75 text-uppercase fw-bold">Empeños Activos</small>
+                                        <h2 class="mb-0 mt-2"><%= (typeof totales !== 'undefined' && totales.articulosEmpeno) ? totales.articulosEmpeno : 0 %></h2>
+                                        <small class="opacity-75 mt-2 d-block"><i class="bi bi-box-seam"></i> En almacén</small>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="bi bi-gem"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl hover-lift">
+                            <div class="card card-box bg-info text-white p-4 h-100 shadow-sm border-0 stat-card">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="opacity-75 text-uppercase fw-bold">Total Cobrado</small>
+                                        <h2 class="mb-0 mt-2">
+                                            <%= empresa.moneda || '$' %> 
+                                            <%= parseFloat((typeof totales !== 'undefined' && totales.dineroCobrado) ? totales.dineroCobrado : 0).toFixed(2) %>
+                                        </h2>
+                                        <small class="opacity-75 mt-2 d-block">✅ Histórico ingresos</small>
+                                    </div>
+                                    <div class="stat-icon">
+                                        <i class="bi bi-wallet2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHARTS -->
+                    <div class="row g-3 mb-5">
+                        <div class="col-lg-6">
+                            <div class="card card-box border-0">
+                                <div class="card-header">
+                                    <i class="bi bi-pie-chart"></i> Estado de la Cartera
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 320px;">
+                                        <canvas id="chartEstados"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="card card-box border-0">
+                                <div class="card-header">
+                                    <i class="bi bi-bar-chart"></i> Balance: Prestado vs Recuperado
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 320px;">
+                                        <canvas id="chartBalance"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QUICK ACTIONS -->
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center gap-2 mb-4">
+                            <h3><i class="bi bi-lightning-charge" style="color: #f59e0b;"></i> Accesos Rápidos</h3>
+                            <span class="badge bg-info">Acciones frecuentes</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-4">
+                                <a href="/prestamos/crear" class="card card-box border-0 quick-action p-4 h-100" style="text-decoration: none; color: inherit;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="quick-icon bg-primary">
+                                            <i class="bi bi-plus-circle"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Nuevo Préstamo</h5>
+                                            <small class="text-muted">Registrar salida de dinero</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <a href="/empenos/crear" class="card card-box border-0 quick-action p-4 h-100" style="text-decoration: none; color: inherit;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="quick-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                                            <i class="bi bi-box-seam"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Nuevo Empeño</h5>
+                                            <small class="text-muted">Registrar entrada de garantía</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <a href="/clientes/crear" class="card card-box border-0 quick-action p-4 h-100" style="text-decoration: none; color: inherit;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="quick-icon bg-success">
+                                            <i class="bi bi-person-plus-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">Nuevo Cliente</h5>
+                                            <small class="text-muted">Registrar nueva persona</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Datos seguros
+        <% 
+            const safeEstados = (typeof graficos !== 'undefined' && graficos.estados) ? graficos.estados : [0,0,0];
+            const safeBalance = (typeof graficos !== 'undefined' && graficos.balance) ? graficos.balance : [0,0];
+        %>
+        
+        const datosEstados = [<%= safeEstados %>]; 
+        const datosBalance = [<%= safeBalance %>]; 
+        
+        // Moneda dinámica para los gráficos
+        const monedaConfig = "<%= (typeof empresa !== 'undefined' && empresa.moneda) ? empresa.moneda : '$' %>";
+
+        const ctx1 = document.getElementById('chartEstados').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pendiente', 'Pagado', 'Vencido'],
+                datasets: [{
+                    data: datosEstados,
+                    backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { position: 'bottom', labels: { font: { size: 13, weight: 600 }, padding: 20 } },
+                    tooltip: { callbacks: { label: function(context) { return context.label + ': ' + context.parsed + ' prestamos'; } } }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('chartBalance').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Total Prestado', 'Total Recuperado'],
+                datasets: [{
+                    label: `Monto en ${monedaConfig}`,
+                    data: datosBalance,
+                    backgroundColor: ['#3b82f6', '#10b981'],
+                    borderRadius: 10,
+                    borderWidth: 0
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: { 
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: true, labels: { font: { size: 13, weight: 600 } } } }
+            }
+        });
+    </script>
+
+<%- include('partials/footer') %>
