@@ -20,7 +20,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Uploads (archivos de usuarios)
+# Uploads (archivos de usuarios - nunca subir)
 public/uploads/*
 !public/uploads/.gitkeep
 
