@@ -64,11 +64,11 @@
             width: 100%;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(15, 20, 25, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 60px rgba(15, 20, 25, 0.3), inset 0 1px 0 rgba(76, 196, 182, 0.1);
+            background: rgba(31, 41, 55, 0.9);
             backdrop-filter: blur(20px);
             animation: slideUp 0.6s ease-out;
-            border: 1px solid rgba(76, 196, 182, 0.15);
+            border: 1px solid rgba(76, 196, 182, 0.2);
         }
 
         @keyframes slideUp {
@@ -123,12 +123,13 @@
 
         .card-body {
             padding: 40px !important;
-            background: white;
+            background: rgba(31, 41, 55, 0.8);
+            color: #e8eef7;
         }
 
         .form-label {
             font-weight: 700;
-            color: #0f1419;
+            color: #ffffff;
             margin-bottom: 10px;
             text-transform: uppercase;
             font-size: 0.85rem;
@@ -138,22 +139,23 @@
         .form-control {
             border-radius: 12px;
             padding: 13px 16px;
-            border: 2px solid #e2e8f0;
-            background-color: #f8fafc;
+            border: 2px solid rgba(76, 196, 182, 0.2);
+            background-color: rgba(31, 41, 55, 0.7);
+            color: #e8eef7;
             font-weight: 500;
             transition: all 0.3s ease;
             font-size: 1rem;
         }
 
-        .form-control:focus {
-            background-color: #fff;
-            border-color: #4cc4b6;
-            box-shadow: 0 0 0 4px rgba(76, 196, 182, 0.12);
+        .form-control::placeholder {
+            color: rgba(232, 238, 247, 0.5);
         }
 
-        .form-control::placeholder {
-            color: #94a3b8;
-            font-weight: 400;
+        .form-control:focus {
+            background-color: rgba(31, 41, 55, 0.9);
+            border-color: #4cc4b6;
+            color: #e8eef7;
+            box-shadow: 0 0 0 0.2rem rgba(76, 196, 182, 0.25);
         }
 
         .btn-login {
@@ -186,8 +188,8 @@
             border: none;
             border-radius: 12px;
             border-left: 4px solid #ef4444;
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
-            color: #dc2626;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
             font-weight: 500;
             animation: slideDown 0.3s ease;
         }
